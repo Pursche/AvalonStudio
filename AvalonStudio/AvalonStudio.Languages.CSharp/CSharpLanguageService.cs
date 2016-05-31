@@ -25,7 +25,7 @@
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.Text;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-
+    using Microsoft.CodeAnalysis.Classification;
     public class CSharpLanguageService : ILanguageService
     {
         private static ConditionalWeakTable<ISourceFile, CPlusPlusDataAssociation> dataAssociations = new ConditionalWeakTable<ISourceFile, CPlusPlusDataAssociation>();
@@ -96,20 +96,32 @@
             throw new NotImplementedException();
         }
 
-        private SyntaxTree GetAndParseTranslationUnit(ISourceFile sourceFile)
+        private static Document CreateDocumentFrom(string sourceCode)
+        {
+            var workspace = new AdhocWorkspace();
+            Microsoft.CodeAnalysis.Solution solution = workspace.CurrentSolution;
+            Project project = solution.AddProject("SyntaxHighlighter", "SyntaxHighlighter", LanguageNames.CSharp);
+            Document document = project.AddDocument("source.cs", sourceCode);
+            return document;
+        }
+  
+
+
+        private Microsoft.CodeAnalysis.Document GetAndParseTranslationUnit(ISourceFile sourceFile)
         {
             var dataAssociation = GetAssociatedData(sourceFile);
 
-            if (dataAssociation.SyntaxTree == null)
+            if (dataAssociation.Document == null)
             {
-                dataAssociation.SyntaxTree = CSharpSyntaxTree.ParseText(SourceText.From(File.OpenRead(sourceFile.Location))) as CSharpSyntaxTree;
+                dataAssociation.Document = CreateDocumentFrom(File.OpenText(sourceFile.Location).ReadToEnd());
+                //dataAssociation.SyntaxTree = CSharpSyntaxTree.ParseText(SourceText.From()) as CSharpSyntaxTree;
             }
             else
-            {
+            {                 
                 //dataAssociation.SyntaxTree.Reparse(unsavedFiles.ToArray(), ReparseTranslationUnitFlags.None);
             }
 
-            return dataAssociation.SyntaxTree;
+            return dataAssociation.Document;
         }
 
         public CodeAnalysisResults RunCodeAnalysis(ISourceFile file, List<UnsavedFile> unsavedFiles, Func<bool> interruptRequested)
@@ -118,27 +130,76 @@
 
             var dataAssociation = GetAssociatedData(file);
             
-            var syntaxTree = GetAndParseTranslationUnit(file);
+            var document = GetAndParseTranslationUnit(file);
+            
+            SyntaxNode syntaxTreeRoot;            
+            var task = document.GetSyntaxRootAsync();
+            task.Wait();
+            syntaxTreeRoot = task.Result;
+            
+            SemanticModel semanticModel;
+            var semTask = document.GetSemanticModelAsync();
+            semTask.Wait();
+            semanticModel = semTask.Result;
+            
 
+            IEnumerable<ClassifiedSpan> classifications = Classifier.GetClassifiedSpans(semanticModel, syntaxTreeRoot.FullSpan, document.Project.Solution.Workspace);
 
-
-            var root = syntaxTree.GetCompilationUnitRoot();
-            var tokens = root.DescendantNodesAndTokensAndSelf();
-
-            foreach (var token in tokens)
+            foreach(var classification in classifications)
             {
-                Console.WriteLine(token.GetType());
-                if (token.AsNode() is TypeDeclarationSyntax)
+                switch (classification.ClassificationType)
                 {
-                    var node = token.AsNode() as TypeDeclarationSyntax;
+                    case ClassificationTypeNames.InterfaceName:
+                    case ClassificationTypeNames.EnumName:
+                    case ClassificationTypeNames.Keyword:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.Keyword });
+                        break;
 
-                    Console.WriteLine(node);
+                    case ClassificationTypeNames.ClassName:
+                    case ClassificationTypeNames.StructName:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.UserType });
+                        break;
 
-                    result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = node.Identifier.Span.Start, Length = node.Identifier.Span.Length, Type = HighlightType.Keyword });
+                    case ClassificationTypeNames.Identifier:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.Identifier });
+                        break;
+
+                    case ClassificationTypeNames.Comment:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.Comment });
+                        break;
+
+                    case ClassificationTypeNames.StringLiteral:
+                    case ClassificationTypeNames.VerbatimStringLiteral:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.Literal });
+                        break;
+
+                    case ClassificationTypeNames.Punctuation:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.Punctuation });
+                        break;
+
+                    case ClassificationTypeNames.WhiteSpace:
+                        //result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.UserType });
+                        break;
+
+                    case ClassificationTypeNames.NumericLiteral:
+                        result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.Literal });
+                        break;
+
+                    case ClassificationTypeNames.PreprocessorKeyword:
+                        //result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.UserType });
+                        break;
+
+                    case ClassificationTypeNames.PreprocessorText:
+                        //result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.UserType });
+                        break;
+
+                    default:
+                        Console.WriteLine(classification.ClassificationType);
+                        //result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = classification.TextSpan.Start, Length = classification.TextSpan.Length, Type = HighlightType.UserType });
+                        break;
                 }
-            }
 
-            result.SyntaxHighlightingData.Add(new SyntaxHighlightingData() { Start = 0, Length = 22, Type = HighlightType.UserType });
+            }
 
             dataAssociation.TextColorizer.SetTransformations(result.SyntaxHighlightingData);
 
@@ -172,7 +233,7 @@
             return result;
         }
 
-        private void OpenBracket(TextEditor editor, TextDocument document, string text)
+        private void OpenBracket(TextEditor editor, AvalonStudio.TextEditor.Document.TextDocument document, string text)
         {
             if (text[0].IsOpenBracketChar() && editor.CaretIndex < document.TextLength && editor.CaretIndex > 0)
             {
@@ -185,7 +246,7 @@
             }
         }
 
-        private void CloseBracket(TextEditor editor, TextDocument document, string text)
+        private void CloseBracket(TextEditor editor, AvalonStudio.TextEditor.Document.TextDocument document, string text)
         {
             if (text[0].IsCloseBracketChar() && editor.CaretIndex < document.TextLength && editor.CaretIndex > 0)
             {
@@ -196,7 +257,7 @@
             }
         }
 
-        public void RegisterSourceFile(IIntellisenseControl intellisense, ICompletionAdviceControl completionAdvice, TextEditor editor, ISourceFile file, TextDocument doc)
+        public void RegisterSourceFile(IIntellisenseControl intellisense, ICompletionAdviceControl completionAdvice, TextEditor editor, ISourceFile file, AvalonStudio.TextEditor.Document.TextDocument doc)
         {
             CPlusPlusDataAssociation association = null;
 
@@ -232,7 +293,7 @@
             dataAssociations.Remove(file);
         }
 
-        public int Format(TextDocument textDocument, uint offset, uint length, int cursor)
+        public int Format(AvalonStudio.TextEditor.Document.TextDocument textDocument, uint offset, uint length, int cursor)
         {
             throw new NotImplementedException();
         }
@@ -246,7 +307,7 @@
         }
         
 
-        public int Comment(TextDocument textDocument, ISegment segment, int caret = -1, bool format = true)
+        public int Comment(AvalonStudio.TextEditor.Document.TextDocument textDocument, ISegment segment, int caret = -1, bool format = true)
         {
             int result = caret;
 
@@ -270,7 +331,7 @@
         }
 
 
-        public int UnComment(TextDocument textDocument, ISegment segment, int caret = -1, bool format = true)
+        public int UnComment(AvalonStudio.TextEditor.Document.TextDocument textDocument, ISegment segment, int caret = -1, bool format = true)
         {
             int result = caret;
 
@@ -306,7 +367,7 @@
 
     class CPlusPlusDataAssociation
     {
-        public CPlusPlusDataAssociation(TextDocument textDocument)
+        public CPlusPlusDataAssociation(AvalonStudio.TextEditor.Document.TextDocument textDocument)
         {
             BackgroundRenderers = new List<IBackgroundRenderer>();
             DocumentLineTransformers = new List<IDocumentLineTransformer>();
@@ -330,5 +391,6 @@
         public EventHandler<KeyEventArgs> KeyDownHandler { get; set; }
         public EventHandler<TextInputEventArgs> TextInputHandler { get; set; }        
         public SyntaxTree SyntaxTree { get; set; }
+        public Microsoft.CodeAnalysis.Document Document { get; set; }
     }
 }

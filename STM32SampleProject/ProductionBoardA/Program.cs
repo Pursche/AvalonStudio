@@ -11,7 +11,7 @@ namespace ConsoleApplication
             {
                 Console.WriteLine("Hello World!");
 
-                
+                Program.Main(new string[] {});
             }
         }
     }
