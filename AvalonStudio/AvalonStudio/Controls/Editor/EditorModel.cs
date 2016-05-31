@@ -59,7 +59,7 @@ namespace AvalonStudio.Controls
                 var completions = LanguageService.CodeCompleteAt(sourceFile, line, column, UnsavedFiles, filter);
                 results = new CodeCompletionResults() { Completions = completions };
             });
-            
+
             return results;
         }
 
@@ -93,11 +93,14 @@ namespace AvalonStudio.Controls
 
             try
             {
-                LanguageService = shell.LanguageServices.Single((o) => o.CanHandle(sourceFile));
+                LanguageService = shell.LanguageServices.FirstOrDefault((o) => o.CanHandle(sourceFile));
 
-                ShellViewModel.Instance.StatusBar.Language = LanguageService.Title;
+                if (LanguageService != null)
+                {
+                    ShellViewModel.Instance.StatusBar.Language = LanguageService.Title;
 
-                LanguageService.RegisterSourceFile(intellisenseControl, completionAdviceControl, Editor, sourceFile, TextDocument);
+                    LanguageService.RegisterSourceFile(intellisenseControl, completionAdviceControl, Editor, sourceFile, TextDocument);
+                }
             }
             catch
             {
@@ -108,7 +111,7 @@ namespace AvalonStudio.Controls
 
 
             StartBackgroundWorkers();
-            
+
             TextDocument.TextChanged += TextDocument_TextChanged;
 
             OnBeforeTextChanged(null);
@@ -205,7 +208,7 @@ namespace AvalonStudio.Controls
                 }
             }
         }
-        
+
 
         public ILanguageService LanguageService { get; set; }
 
@@ -228,7 +231,7 @@ namespace AvalonStudio.Controls
 
         public void OnBeforeTextChanged(object param)
         {
-            
+
         }
 
         private bool isDirty;
@@ -255,7 +258,7 @@ namespace AvalonStudio.Controls
                         CodeAnalysisResults = result;
                     });
                 }
-            });         
+            });
         }
 
         public async void OnTextChanged(object param)
@@ -265,6 +268,6 @@ namespace AvalonStudio.Controls
             await TriggerCodeAnalysis();
         }
 
-                
+
     }
 }
