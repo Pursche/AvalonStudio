@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AvalonStudio.Languages.CSharp</RootNamespace>
     <AssemblyName>AvalonStudio.Languages.CSharp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -196,6 +196,7 @@
     <Compile Include="BracketMatchingBackgroundRenderer.cs" />
     <Compile Include="CSharpLanguageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestManager.cs" />
     <Compile Include="TextColoringTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -224,7 +225,7 @@
     <PostBuildEvent>copy $(TargetPath) ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins\$(TargetFileName)
 copy $(TargetDir)\Microsoft.CodeAnalysis.CSharp.dll ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins\Microsoft.CodeAnalysis.CSharp.dll
 copy $(TargetDir)\Microsoft.CodeAnalysis.dll ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins\Microsoft.CodeAnalysis.dll
-copy $(TargetDir)\Microsoft.CodeAnalysis.CSharp.Workspaces.dll ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</PostBuildEvent>
+copy $(TargetDir)\Microsoft.CodeAnalysis.CSharp.Workspaces.dll ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
