@@ -1,45 +1,31 @@
+using System;
+using System.ComponentModel.Composition;
+using System.Windows.Input;
+using Avalonia.Input;
+using AvalonStudio.Extensibility.Commands;
+using ReactiveUI;
+using Key = Avalonia.Input.Key;
+
 namespace AvalonStudio.Shell.Commands
 {
-    using Extensibility.Commands;
-    using Avalonia.Input;
-    using ReactiveUI;
-    using System.ComponentModel.Composition;
-    using System;
-    using Extensibility;
+	[CommandDefinition]
+	public class ExitCommandDefinition : CommandDefinition
+	{
+		[Export] public static CommandKeyboardShortcut KeyGesture =
+			new CommandKeyboardShortcut<ExitCommandDefinition>(new KeyGesture {Key = Key.F4, Modifiers = InputModifiers.Alt});
 
-    [CommandDefinition]
-    public class ExitCommandDefinition : CommandDefinition
-    {
-        public ExitCommandDefinition()
-        {
-            command = ReactiveCommand.Create();
+		private readonly ReactiveCommand<object> _command;
 
-            command.Subscribe(_ =>
-            {
-                Environment.Exit(0);
-            });
-        }
+		public ExitCommandDefinition()
+		{
+			_command = ReactiveCommand.Create();
 
-        public override string Text
-        {
-            get { return "Exit"; }
-        }
+			_command.Subscribe(_ => { Environment.Exit(0); });
+		}
 
-        public override string ToolTip
-        {
-            get { return "Exit Tool Tip"; }
-        }
+		public override string Text => "Exit";
 
-        ReactiveCommand<object> command;
-        public override System.Windows.Input.ICommand Command
-        {
-            get
-            {
-                return command;
-            }
-        }
-
-        [Export]
-        public static CommandKeyboardShortcut KeyGesture = new CommandKeyboardShortcut<ExitCommandDefinition>(new KeyGesture() { Key = Key.F4, Modifiers = InputModifiers.Alt });
-    }
+		public override string ToolTip => "Exit Tool Tip";
+		public override ICommand Command => _command;
+	}
 }

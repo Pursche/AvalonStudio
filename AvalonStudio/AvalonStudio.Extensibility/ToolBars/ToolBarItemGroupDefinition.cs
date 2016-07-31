@@ -1,24 +1,15 @@
 namespace AvalonStudio.Extensibility.ToolBars
 {
-    public class ToolBarItemGroupDefinition
-    {
-        private readonly ToolBarDefinition _toolBar;
-        private readonly int _sortOrder;
+	public class ToolBarItemGroupDefinition
+	{
+		public ToolBarItemGroupDefinition(ToolBarDefinition toolBar, int sortOrder)
+		{
+			ToolBar = toolBar;
+			SortOrder = sortOrder;
+		}
 
-        public ToolBarDefinition ToolBar
-        {
-            get { return _toolBar; }
-        }
+		public ToolBarDefinition ToolBar { get; }
 
-        public int SortOrder
-        {
-            get { return _sortOrder; }
-        }
-
-        public ToolBarItemGroupDefinition(ToolBarDefinition toolBar, int sortOrder)
-        {
-            _toolBar = toolBar;
-            _sortOrder = sortOrder;
-        }
-    }
+		public int SortOrder { get; }
+	}
 }

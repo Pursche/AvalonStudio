@@ -1,12 +1,38 @@
+using System;
+using Avalonia;
+using System.Reflection;
+using System.ComponentModel;
+
 namespace AvalonStudio.MVVM
 {
-    using Avalonia;
-    using System;
-    using System.Collections.Generic;
+	public static class Extensions
+	{
+        public static string GetDescription<T>(this T enumerationValue)
+            where T : struct
+        {
+            Type type = enumerationValue.GetType();
+            if (!type.IsEnum)
+            {
+                throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+            }
 
-    public static class Extensions
-    {
+            //Tries to find a DescriptionAttribute for a potential friendly name
+            //for the enum
+            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+            if (memberInfo != null && memberInfo.Length > 0)
+            {
+                object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
+                if (attrs != null && attrs.Length > 0)
+                {
+                    //Pull out the description value
+                    return ((DescriptionAttribute)attrs[0]).Description;
+                }
+            }
+            //If we have no description attribute, just return the ToString of the enum
+            return enumerationValue.ToString();
+
+        }
         //public static System.Drawing.Point ToSystemDrawing (this Point p)
         //{
         //    return new System.Drawing.Point ((int)p.X, (int)p.Y);
@@ -63,16 +89,15 @@ namespace AvalonStudio.MVVM
         //    return new Point (point.X * matrix.M11, point.Y * matrix.M22);
         //}
 
-        
 
-        public static double GetDistance (this Point start, Point point)
-        {
-            double a2 = Math.Pow (Math.Abs (start.X - point.X), 2);
-            double b2 = Math.Pow(Math.Abs (start.Y - point.Y), 2);
+        public static double GetDistance(this Point start, Point point)
+		{
+			var a2 = Math.Pow(Math.Abs(start.X - point.X), 2);
+			var b2 = Math.Pow(Math.Abs(start.Y - point.Y), 2);
 
-            return Math.Sqrt (a2 + b2);
-        }
-        //#endregion
+			return Math.Sqrt(a2 + b2);
+		}
 
-    }
+		//#endregion
+	}
 }

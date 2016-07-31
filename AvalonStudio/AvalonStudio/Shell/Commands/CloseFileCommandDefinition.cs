@@ -1,27 +1,16 @@
+using System.Windows.Input;
+using AvalonStudio.Extensibility.Commands;
+using ReactiveUI;
+
 namespace AvalonStudio.Shell.Commands
 {
-    using AvalonStudio.Extensibility.Commands;
-    using ReactiveUI;
-    [CommandDefinition]
-    public class CloseFileCommandDefinition : CommandDefinition
-    {
-        public override string Text
-        {
-            get { return "Close"; }
-        }
+	[CommandDefinition]
+	public class CloseFileCommandDefinition : CommandDefinition
+	{
+		private ReactiveCommand<object> _command;
+		public override string Text => "Close";
 
-        public override string ToolTip
-        {
-            get { return "Close ToolTip"; }
-        }
-
-        ReactiveCommand<object> command;
-        public override System.Windows.Input.ICommand Command
-        {
-            get
-            {
-                return command;
-            }
-        }
-    }
+		public override string ToolTip => "Close ToolTip";
+		public override ICommand Command => _command;
+	}
 }

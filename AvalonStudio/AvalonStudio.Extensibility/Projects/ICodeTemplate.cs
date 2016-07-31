@@ -1,20 +1,19 @@
+using System.ComponentModel.Composition;
+using System.Threading.Tasks;
+
 namespace AvalonStudio.Projects
 {
-    using Avalonia.Controls;
-    using System.ComponentModel.Composition;
-    using System.Threading.Tasks;
+	[InheritedExport(typeof (ICodeTemplate))]
+	public interface ICodeTemplate
+	{
+		string Title { get; }
 
-    [InheritedExport(typeof(ICodeTemplate))]
-    public interface ICodeTemplate
-    {
-        string Title { get; }        
+		string Description { get; }
 
-        string Description { get; }
-        
-        Task<ISourceFile> Generate(IProjectFolder folder, string name);
+		object TemplateForm { get; }
 
-        bool IsCompatible(IProject project);
+		Task Generate(IProjectFolder folder);
 
-        Control TemplateForm { get; }
-    }
+		bool IsCompatible(IProject project);
+	}
 }

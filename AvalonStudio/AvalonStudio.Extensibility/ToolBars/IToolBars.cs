@@ -1,10 +1,10 @@
+using AvalonStudio.Extensibility.MVVM;
+
 namespace AvalonStudio.Extensibility.ToolBars
 {
-    using AvalonStudio.Extensibility.MVVM;
-
-    public interface IToolBars
-    {
-        IObservableCollection<IToolBar> Items {get;}
-        bool Visible { get; set; }
-    }
+	public interface IToolBars
+	{
+		IObservableCollection<IToolBar> Items { get; }
+		bool Visible { get; set; }
+	}
 }

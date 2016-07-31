@@ -1,66 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using AvalonStudio.Debugging;
+using AvalonStudio.Documents;
+using AvalonStudio.Extensibility.Dialogs;
+using AvalonStudio.Languages;
+using AvalonStudio.Projects;
+using AvalonStudio.TestFrameworks;
+using AvalonStudio.Toolchains;
+
 namespace AvalonStudio.Shell
 {
-    using AvalonStudio.Projects;
-    using Documents;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Reactive.Linq;
-    using System.Threading.Tasks;
-    using ReactiveUI;
-    using Avalonia.Reactive;
-    using TestFrameworks;
-    using Debugging;
-    using Toolchains;
-    using Languages;
-    using Extensibility.Dialogs;
-
-    public enum Perspective
-    {
-        Editor,
-        Debug
-    }
+	public enum Perspective
+	{
+		Editor,
+		Debug
+	}
 
 
-    public interface IShell
-    {
-        Perspective CurrentPerspective { get; set; }
+	public interface IShell
+	{
+		Perspective CurrentPerspective { get; set; }
+		ISolution CurrentSolution { get; set; }
+		IEditor SelectedDocument { get; }
+		ObservableCollection<object> Tools { get; }
+		ModalDialogViewModelBase ModalDialog { get; set; }
+		object BottomSelectedTool { get; set; }
 
-        event EventHandler SolutionChanged;
-        ISolution CurrentSolution { get; set; }
+		IEnumerable<IProject> ProjectTypes { get; }
 
-        IEditor GetDocument(string path);
-        IEditor SelectedDocument { get; }
+		IEnumerable<IProjectTemplate> ProjectTemplates { get; }
 
-        Task<IEditor> OpenDocument(ISourceFile file, int line, int column = 1, bool debugHighlight = false, bool selectLine = false);
-        ObservableCollection<object> Tools { get; }
-        ModalDialogViewModelBase ModalDialog { get; set; }
-        object BottomSelectedTool { get; set; }
-        void InvalidateCodeAnalysis();
-        
-        void Build(IProject project);
-        void Clean(IProject project);
-        
-        void Build();
-        void Clean();
+		IEnumerable<ICodeTemplate> CodeTemplates { get; }
 
-        void Save();
-        void SaveAll();
+		IEnumerable<ILanguageService> LanguageServices { get; }
 
-        IProject GetDefaultProject();
+		IEnumerable<IToolChain> ToolChains { get; }
 
-        IEnumerable<IProject> ProjectTypes { get; }
+		IEnumerable<IDebugger> Debuggers { get; }
 
-        IEnumerable<IProjectTemplate> ProjectTemplates { get; }
+		IEnumerable<ITestFramework> TestFrameworks { get; }
 
-        IEnumerable<ICodeTemplate> CodeTemplates { get; }
+		event EventHandler SolutionChanged;
 
-        IEnumerable<ILanguageService> LanguageServices { get; }
+		IEditor GetDocument(string path);
 
-        IEnumerable<IToolChain> ToolChains { get; }
+		Task<IEditor> OpenDocument(ISourceFile file, int line, int column = 1, bool debugHighlight = false,
+			bool selectLine = false);
 
-        IEnumerable<IDebugger> Debuggers { get; }
+		void InvalidateCodeAnalysis();
 
-        IEnumerable<ITestFramework> TestFrameworks { get; }
-    }
+		void Build(IProject project);
+		void Clean(IProject project);
+
+		void Build();
+		void Clean();
+
+		void Save();
+		void SaveAll();
+
+		IProject GetDefaultProject();
+	}
 }

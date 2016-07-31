@@ -1,18 +1,31 @@
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using System.Collections;
+
 namespace AvalonStudio.Debugging
 {
-    using Avalonia.Controls;
-    using Avalonia;
+	public class DisassemblyView : UserControl
+	{
+        private ListBox disassemblyList;
 
-    public class DisassemblyView : UserControl
-    {
         public DisassemblyView()
-        {
-            this.InitializeComponent();
-        }
+		{
+			InitializeComponent();
 
-        private void InitializeComponent()
-        {
-            Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
-        }
-    }
+            disassemblyList = this.FindControl<ListBox>("disassemblyList");
+
+            disassemblyList.SelectionChanged += (sender, e) =>
+            {
+                var list = disassemblyList.Items as IList;
+
+                disassemblyList.ScrollIntoView(list[disassemblyList.SelectedIndex + 8]);
+                disassemblyList.ScrollIntoView(list[disassemblyList.SelectedIndex - 8]);
+            };
+		}
+
+		private void InitializeComponent()
+		{
+			AvaloniaXamlLoader.Load(this);
+		}
+	}
 }

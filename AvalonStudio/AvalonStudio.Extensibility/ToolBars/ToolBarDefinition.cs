@@ -1,24 +1,15 @@
 namespace AvalonStudio.Extensibility.ToolBars
 {
-    public class ToolBarDefinition
-    {
-        private readonly int _sortOrder;
-        private readonly string _name;
+	public class ToolBarDefinition
+	{
+		public ToolBarDefinition(int sortOrder, string name)
+		{
+			SortOrder = sortOrder;
+			Name = name;
+		}
 
-        public int SortOrder
-        {
-            get { return _sortOrder; }
-        }
+		public int SortOrder { get; }
 
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public ToolBarDefinition(int sortOrder, string name)
-        {
-            _sortOrder = sortOrder;
-            _name = name;
-        }
-    }
+		public string Name { get; }
+	}
 }

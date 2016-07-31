@@ -1,62 +1,55 @@
+using System;
+using System.ComponentModel.Composition;
+using System.Windows.Input;
+using Avalonia.Controls.Shapes;
+using Avalonia.Input;
+using Avalonia.Media;
+using AvalonStudio.Extensibility;
+using AvalonStudio.Extensibility.Commands;
+using ReactiveUI;
+using Key = Avalonia.Input.Key;
+
 namespace AvalonStudio.Shell.Commands
 {
-    using Extensibility.Commands;
-    using System;
-    using System.ComponentModel.Composition;
-    using Avalonia.Input;
-    using ReactiveUI;
-    using Extensibility;
-    using Avalonia.Controls.Shapes;
-    using Avalonia.Media;
+	[CommandDefinition]
+	public class CommentCommandDefinition : CommandDefinition
+	{
+		[Export] public static CommandKeyboardShortcut KeyGesture =
+			new CommandKeyboardShortcut<SaveFileCommandDefinition>(new KeyGesture
+			{
+				Key = Key.S,
+				Modifiers = InputModifiers.Control
+			});
 
-    [CommandDefinition]
-    public class CommentCommandDefinition : CommandDefinition
-    {
-        public CommentCommandDefinition()
-        {
-            command = ReactiveCommand.Create();
+		private readonly ReactiveCommand<object> _command;
 
-            command.Subscribe(_ =>
-            {
-                var shell = IoC.Get<IShell>();
+		public CommentCommandDefinition()
+		{
+			_command = ReactiveCommand.Create();
 
-                shell.SelectedDocument?.Comment();
-            });
-        }
-        
-        public override string Text
-        {
-            get { return "Comment"; }
-        }
+			_command.Subscribe(_ =>
+			{
+				var shell = IoC.Get<IShell>();
 
-        public override string ToolTip
-        {
-            get { return "Comments the selected code."; }
-        }
+				shell.SelectedDocument?.Comment();
+			});
+		}
 
-        public override Path IconPath
-        {
-            get
-            {
-                return new Path() { Fill = Brush.Parse("#FF8DD28A"), UseLayoutRounding = false, Stretch = Stretch.Uniform, Data = StreamGeometry.Parse("M3,3H21V5H3V3M9,7H21V9H9V7M3,11H21V13H3V11M9,15H21V17H9V15M3,19H21V21H3V19Z") };
-            }
-        }
+		public override string Text => "Comment";
 
-        public override Uri IconSource
-        {
-            get { return new Uri(""); }
-        }
+		public override string ToolTip => "Comments the selected code.";
 
-        ReactiveCommand<object> command;
-        public override System.Windows.Input.ICommand Command
-        {
-            get
-            {
-                return command;
-            }
-        }
+		public override Path IconPath
+			=>
+				new Path
+				{
+					Fill = Brush.Parse("#FF8DD28A"),
+					UseLayoutRounding = false,
+					Stretch = Stretch.Uniform,
+					Data = StreamGeometry.Parse("M3,3H21V5H3V3M9,7H21V9H9V7M3,11H21V13H3V11M9,15H21V17H9V15M3,19H21V21H3V19Z")
+				};
 
-        [Export]
-        public static CommandKeyboardShortcut KeyGesture = new CommandKeyboardShortcut<SaveFileCommandDefinition>(new KeyGesture() { Key = Key.S, Modifiers = InputModifiers.Control });
-    }
+		public override Uri IconSource => new Uri("");
+		public override ICommand Command => _command;
+	}
 }

@@ -1,70 +1,71 @@
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using AvalonStudio.Extensibility;
+using AvalonStudio.Extensibility.Plugin;
+using AvalonStudio.Extensibility.Utils;
+using AvalonStudio.MVVM;
+using AvalonStudio.Shell;
+using ReactiveUI;
+
 namespace AvalonStudio.Controls.Standard.ErrorList
 {
-    using AvalonStudio.MVVM;
-    using Languages;
-    using System.Collections.ObjectModel;
-    using ReactiveUI;
-    using System;
-    using Extensibility;
-    using Extensibility.Plugin;
-    using Extensibility.Utils;
-    using Shell;
+	public class ErrorListViewModel : ToolViewModel, IExtension, IErrorList
+	{
+		private ObservableCollection<ErrorViewModel> errors;
 
-    public class ErrorListViewModel : ToolViewModel, IExtension, IErrorList
-    {
-        private IShell shell;
+		private ErrorViewModel selectedError;
+		private IShell shell;
 
-        public ErrorListViewModel()
-        {
-            Title = "Error List";
-            errors = new ObservableCollection<ErrorViewModel>();
-        }
+		public ErrorListViewModel()
+		{
+			Title = "Error List";
+			errors = new ObservableCollection<ErrorViewModel>();
+		}
 
-        private ObservableCollection<ErrorViewModel> errors;
-        public ObservableCollection<ErrorViewModel> Errors
-        {
-            get { return errors; }
-            set { this.RaiseAndSetIfChanged(ref errors, value); }
-        }
+		public ErrorViewModel SelectedError
+		{
+			get { return selectedError; }
+			set
+			{
+				this.RaiseAndSetIfChanged(ref selectedError, value);
 
-        private ErrorViewModel selectedError;
-        public ErrorViewModel SelectedError
-        {
-            get { return selectedError; }
-            set
-            {
-                this.RaiseAndSetIfChanged(ref selectedError, value);
+				if (value != null)
+				{
+					Task.Run(async () =>
+					{
+						var document =
+							await
+								shell.OpenDocument(shell.CurrentSolution.FindFile(PathSourceFile.FromPath(null, null, value.Model.File)),
+									value.Line);
 
-                if (value != null)
-                {
-                    var document = shell.OpenDocument(shell.CurrentSolution.FindFile(PathSourceFile.FromPath(null, null, value.Model.File)), value.Line);
+						if (document != null)
+						{
+							document.GotoOffset(value.Model.StartOffset);
+						}
+					});
+				}
+			}
+		}
 
-                    document.Wait();
+		public override Location DefaultLocation
+		{
+			get { return Location.Bottom; }
+		}
 
-                    if (document != null)
-                    {
-                        document.Result.GotoOffset(value.Model.Offset);
-                    }
-                }
-            }
-        }
+		public ObservableCollection<ErrorViewModel> Errors
+		{
+			get { return errors; }
+			set { this.RaiseAndSetIfChanged(ref errors, value); }
+		}
 
-        public override Location DefaultLocation
-        {
-            get
-            {
-                return Location.Bottom;
-            }
-        }
+		public void BeforeActivation()
+		{
+			IoC.RegisterConstant(this, typeof (IErrorList));
+		}
 
-        public void BeforeActivation()
-        {
-            IoC.RegisterConstant(this, typeof(IErrorList));        
-        }
-
-        public void Activation()
-        {
-            shell = IoC.Get<IShell>();
-        }
-    }
+		public void Activation()
+		{
+			shell = IoC.Get<IShell>();
+		}
+	}
 }

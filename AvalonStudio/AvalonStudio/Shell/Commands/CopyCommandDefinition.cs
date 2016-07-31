@@ -1,27 +1,16 @@
+using System.Windows.Input;
+using AvalonStudio.Extensibility.Commands;
+using ReactiveUI;
+
 namespace AvalonStudio.Shell.Commands
 {
-    using AvalonStudio.Extensibility.Commands;
-    using ReactiveUI;
-    [CommandDefinition]
-    public class CopyCommandDefinition : CommandDefinition
-    {
-        public override string Text
-        {
-            get { return "Copy"; }
-        }
+	[CommandDefinition]
+	public class CopyCommandDefinition : CommandDefinition
+	{
+		private ReactiveCommand<object> _command;
+		public override string Text => "Copy";
 
-        public override string ToolTip
-        {
-            get { return "Copy ToolTip"; }
-        }
-
-        ReactiveCommand<object> command;
-        public override System.Windows.Input.ICommand Command
-        {
-            get
-            {
-                return command;
-            }
-        }
-    }
+		public override string ToolTip => "Copy ToolTip";
+		public override ICommand Command => _command;
+	}
 }

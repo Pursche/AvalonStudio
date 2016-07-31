@@ -1,67 +1,66 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
+using AvalonStudio.Debugging;
+using AvalonStudio.TestFrameworks;
+using AvalonStudio.Toolchains;
+
 namespace AvalonStudio.Projects
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.Composition;
-    using Avalonia.Controls;
-    using Debugging;
-    using Toolchains;
-    using TestFrameworks;
+	[InheritedExport(typeof (IProject))]
+	public interface IProject : IProjectFolder, IComparable<IProject>
+	{
+		ISolution Solution { get; }
 
-    [InheritedExport(typeof(IProject))]
-    public interface IProject : IProjectFolder, IComparable<IProject>
-    {
-        ISolution Solution { get; }
+		/// <summary>
+		///     List of references with the project.
+		/// </summary>
+		ObservableCollection<IProject> References { get; }
 
-        /// <summary>
-        /// List of references with the project.
-        /// </summary>
-        ObservableCollection<IProject> References { get; }        
+		IToolChain ToolChain { get; set; }
+		IDebugger Debugger { get; set; }
+		ITestFramework TestFramework { get; set; }
 
-        void AddReference(IProject project);
+		bool Hidden { get; set; }
 
-        void RemoveReference(IProject project);
+		/// <summary>
+		///     The directory the project file resides in.
+		/// </summary>
+		string CurrentDirectory { get; }
 
-        IToolChain ToolChain { get; set; }
-        IDebugger Debugger { get; set; }
-        ITestFramework TestFramework { get; set; }
+		/// <summary>
+		///     The location of the project file
+		/// </summary>
+		string Location { get; }
 
-        ISourceFile FindFile(ISourceFile file);
+		IList<object> ConfigurationPages { get; }
+		string Extension { get; }
 
-        bool Hidden { get; set; }
+		//IDictionary<string, string> Settings { get; }        
 
-        /// <summary>
-        /// The directory the project file resides in.
-        /// </summary>
-        string CurrentDirectory { get; }
+		// TODO perhaps this shouldnt be tied to IProject?
+		string Executable { get; set; }
 
-        /// <summary>
-        /// The location of the project file
-        /// </summary>
-        string Location { get; }        
+		dynamic ToolchainSettings { get; }
+
+		dynamic DebugSettings { get; }
+
+		void AddReference(IProject project);
+
+		void RemoveReference(IProject project);
+
+		ISourceFile FindFile(ISourceFile file);
 
 
-        /// <summary>
-        /// Resolves all references in the project.
-        /// </summary>
-        void ResolveReferences();
+		/// <summary>
+		///     Resolves all references in the project.
+		/// </summary>
+		void ResolveReferences();
 
-        IList<TabItem> ConfigurationPages { get; }
+		// TODO should these 2 methods be in seperate class?
+		IProject Load(ISolution solution, string filePath);
 
-        // TODO should these 2 methods be in seperate class?
-        IProject Load(ISolution solution, string filePath);
-        string Extension { get; }
-
-        //IDictionary<string, string> Settings { get; }        
-
-        // TODO perhaps this shouldnt be tied to IProject?
-        string Executable { get; set; }
-
-        dynamic ToolchainSettings { get; }
-
-        dynamic DebugSettings { get; }
-
-        void Save();
-    }
+		void Save();
+	}
 }

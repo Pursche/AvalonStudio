@@ -1,47 +1,38 @@
+using System;
+using System.ComponentModel.Composition;
+using System.Windows.Input;
+using Avalonia.Input;
+using AvalonStudio.Controls;
+using AvalonStudio.Extensibility;
+using AvalonStudio.Extensibility.Commands;
+using ReactiveUI;
+using Key = Avalonia.Input.Key;
+
 namespace AvalonStudio.Shell.Commands
 {
-    using Extensibility.Commands;
-    using Avalonia.Input;
-    using ReactiveUI;
-    using System.ComponentModel.Composition;
-    using System;
-    using Extensibility;
-    using Controls;
-    [CommandDefinition]
-    public class PackagesCommandDefinition : CommandDefinition
-    {
-        public PackagesCommandDefinition()
-        {
-            command = ReactiveCommand.Create();
+	[CommandDefinition]
+	public class PackagesCommandDefinition : CommandDefinition
+	{
+		[Export] public static CommandKeyboardShortcut KeyGesture =
+			new CommandKeyboardShortcut<ExitCommandDefinition>(new KeyGesture {Key = Key.F4, Modifiers = InputModifiers.Alt});
 
-            command.Subscribe(_ =>
-            {
-                IShell shell = IoC.Get<IShell>();
-                shell.ModalDialog = new PackageManagerDialogViewModel();
-                shell.ModalDialog.ShowDialog();
-            });
-        }
+		private readonly ReactiveCommand<object> _command;
 
-        public override string Text
-        {
-            get { return "Packages"; }
-        }
+		public PackagesCommandDefinition()
+		{
+			_command = ReactiveCommand.Create();
 
-        public override string ToolTip
-        {
-            get { return "Packages Tool Tip"; }
-        }
+			_command.Subscribe(_ =>
+			{
+				var shell = IoC.Get<IShell>();
+				shell.ModalDialog = new PackageManagerDialogViewModel();
+				shell.ModalDialog.ShowDialog();
+			});
+		}
 
-        ReactiveCommand<object> command;
-        public override System.Windows.Input.ICommand Command
-        {
-            get
-            {
-                return command;
-            }
-        }
+		public override string Text => "Packages";
 
-        [Export]
-        public static CommandKeyboardShortcut KeyGesture = new CommandKeyboardShortcut<ExitCommandDefinition>(new KeyGesture() { Key = Key.F4, Modifiers = InputModifiers.Alt });
-    }
+		public override string ToolTip => "Packages Tool Tip";
+		public override ICommand Command => _command;
+	}
 }

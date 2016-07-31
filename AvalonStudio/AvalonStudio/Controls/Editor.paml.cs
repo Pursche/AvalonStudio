@@ -1,45 +1,27 @@
+using System;
+using System.Reactive.Disposables;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+
 namespace AvalonStudio.Controls
 {
-    using AvalonStudio.TextEditor;
-    using Avalonia;
-    using Avalonia.Controls;
-    using System.Reactive.Disposables;
-    using System;
-
     public class Editor : UserControl
     {
-        private TextEditor editor;
+        private readonly CompositeDisposable disposables;
+        private TextEditor.TextEditor editor;
         private EditorViewModel editorViewModel;
-        private CompositeDisposable disposables;
-
-        ~Editor()
-        {
-            System.Console.WriteLine(("Editor UserControl Destructed."));
-        }
-
-        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-        {            
-            editor = this.Find<TextEditor>("editor");
-        }
-
-        protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-        {
-            editor = null;
-            editorViewModel = null;
-
-            disposables.Dispose();
-        }
 
         public Editor()
-        {                        
+        {
             InitializeComponent();
 
             disposables = new CompositeDisposable();
-            editor = this.Find<TextEditor>("editor");
+            editor = this.Find<TextEditor.TextEditor>("editor");
 
-            disposables.Add(DataContextProperty.Changed.Subscribe((o) =>
+            disposables.Add(DataContextProperty.Changed.Subscribe(o =>
             {
-                if (o.NewValue is EditorViewModel)  // for some reason intellisense view model gets passed here! bug in avalonia?
+                if (o.NewValue is EditorViewModel) // for some reason intellisense view model gets passed here! bug in avalonia?
                 {
                     if (o.OldValue is EditorViewModel && (o.OldValue as EditorViewModel).Model.Editor == editor)
                     {
@@ -60,11 +42,44 @@ namespace AvalonStudio.Controls
             }));
         }
 
+        ~Editor()
+        {
+            Console.WriteLine("Editor UserControl Destructed.");
+        }
+
+        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            editor = this.Find<TextEditor.TextEditor>("editor");
+
+            editor.CaretChangedByPointerClick += Editor_CaretChangedByPointerClick;
+            editor.EditorScrolled += Editor_EditorScrolled;
+        }
+
+        private void Editor_EditorScrolled(object sender, EventArgs e)
+        {
+            editorViewModel.Intellisense.IsVisible = false;
+        }
+
+        private void Editor_CaretChangedByPointerClick(object sender, EventArgs e)
+        {
+            editorViewModel.Intellisense.IsVisible = false;
+        }
+
+        protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+        {
+            editor.EditorScrolled -= Editor_EditorScrolled;
+            editor.CaretChangedByPointerClick -= Editor_CaretChangedByPointerClick;
+
+            editor = null;
+            editorViewModel = null;
+
+            disposables.Dispose();
+        }
+
 
         private void InitializeComponent()
         {
-            Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
-
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }

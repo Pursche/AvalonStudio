@@ -1,16 +1,12 @@
 namespace AvalonStudio.Extensibility.ToolBars
 {
-    public class ExcludeToolBarItemDefinition
-    {
-        private readonly ToolBarItemDefinition _toolBarItemDefinitionToExclude;
-        public ToolBarItemDefinition ToolBarItemDefinitionToExclude
-        {
-            get { return _toolBarItemDefinitionToExclude; }
-        }
+	public class ExcludeToolBarItemDefinition
+	{
+		public ExcludeToolBarItemDefinition(ToolBarItemDefinition toolBarItemDefinition)
+		{
+			ToolBarItemDefinitionToExclude = toolBarItemDefinition;
+		}
 
-        public ExcludeToolBarItemDefinition(ToolBarItemDefinition ToolBarItemDefinition)
-        {
-            _toolBarItemDefinitionToExclude = ToolBarItemDefinition;
-        }
-    }
+		public ToolBarItemDefinition ToolBarItemDefinitionToExclude { get; }
+	}
 }

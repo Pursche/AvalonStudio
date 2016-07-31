@@ -1,18 +1,18 @@
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+
 namespace AvalonStudio.Controls
 {
-    using Avalonia.Controls;
-    using Avalonia;
+	public class ModalDialog : UserControl
+	{
+		public ModalDialog()
+		{
+			InitializeComponent();
+		}
 
-    public class ModalDialog : UserControl
-    {
-        public ModalDialog()
-        {
-            this.InitializeComponent();
-        }
-
-        private void InitializeComponent()
-        {
-            Avalonia.Markup.Xaml.AvaloniaXamlLoader.Load(this);
-        }
-    }
+		private void InitializeComponent()
+		{
+			AvaloniaXamlLoader.Load(this);
+		}
+	}
 }

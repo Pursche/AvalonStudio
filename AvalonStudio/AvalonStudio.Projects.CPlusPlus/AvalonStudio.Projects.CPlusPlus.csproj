@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AvalonStudio.Projects.CPlusPlus</RootNamespace>
     <AssemblyName>AvalonStudio.Projects.CPlusPlus</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -34,67 +34,67 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Avalonia.Animation, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Animation.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Animation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Base, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Base.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Controls, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Controls.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Controls.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.DesignerSupport, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.DesignerSupport.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.DesignerSupport.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Diagnostics, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Diagnostics.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.HtmlRenderer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.HtmlRenderer.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.HtmlRenderer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Input, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Input.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Input.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Interactivity, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Layout, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Layout.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Layout.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Logging.Serilog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Logging.Serilog.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Logging.Serilog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Markup, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Markup.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Markup.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Markup.Xaml, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Markup.Xaml.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Markup.Xaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.ReactiveUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.ReactiveUI.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.ReactiveUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.SceneGraph, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.SceneGraph.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.SceneGraph.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Styling, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Styling.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Styling.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Avalonia.Themes.Default, Version=0.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Avalonia.0.2.0.1583-alpha\lib\portable-windows8+net45\Avalonia.Themes.Default.dll</HintPath>
+      <HintPath>..\packages\Avalonia.0.2.0.1755-alpha\lib\portable-windows8+net45\Avalonia.Themes.Default.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -119,20 +119,24 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    <Reference Include="System.Reactive.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.3.0.0\lib\net45\System.Reactive.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.3.0.0\lib\net45\System.Reactive.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    <Reference Include="System.Reactive.Linq, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.3.0.0\lib\net45\System.Reactive.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.PlatformServices.3.0.0\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Windows.Threading, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Windows.Threading.3.0.0\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -141,20 +145,39 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlankCPlusPlusLangaguageTemplate.cs" />
     <Compile Include="ClassCodeTemplate.cs" />
+    <Compile Include="ClassTemplateSettingsView.paml.cs">
+      <DependentUpon>ClassTemplateSettingsView.paml</DependentUpon>
+    </Compile>
+    <Compile Include="ClassTemplateSettingsViewModel.cs">
+      <DependentUpon>ClassTemplateSettingsView.paml</DependentUpon>
+    </Compile>
     <Compile Include="ComponentSettingsForm.paml.cs">
       <DependentUpon>ComponentSettingsForm.paml</DependentUpon>
     </Compile>
+    <Compile Include="CPlusPlusClassTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CPlusPlusClassTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CPlusPlusClassTemplateCode.cs" />
+    <Compile Include="CPlusPlusClassHeaderTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CPlusPlusClassHeaderTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CPlusPlusHeaderTemplateCode.cs" />
     <Compile Include="DebuggerSettingsForm.paml.cs">
-      <DependentUpon>DebuggerSettingsForm.paml</DependentUpon>
+      <DependentUpon>DebuggerSettingsFormView.paml</DependentUpon>
     </Compile>
     <Compile Include="DebuggerSettingsFormViewModel.cs" />
     <Compile Include="DefineViewModel.cs" />
     <Compile Include="IncludePathSettingsForm.paml.cs">
-      <DependentUpon>IncludePathSettingsForm.paml</DependentUpon>
+      <DependentUpon>IncludePathSettingsFormView.paml</DependentUpon>
     </Compile>
     <Compile Include="IncludePathSettingsFormViewModel.cs" />
     <Compile Include="IncludeViewModel.cs" />
@@ -162,7 +185,7 @@
     <Compile Include="Reference.cs" />
     <Compile Include="ReferenceSettingsFormViewModel.cs" />
     <Compile Include="ReferencesSettingsForm.paml.cs">
-      <DependentUpon>ReferencesSettingsForm.paml</DependentUpon>
+      <DependentUpon>ReferenceSettingsFormView.paml</DependentUpon>
     </Compile>
     <Compile Include="SourceFile.cs" />
     <Compile Include="StaticLibraryTemplate.cs" />
@@ -171,11 +194,11 @@
     </Compile>
     <Compile Include="TargetSettingsFormViewModel.cs" />
     <Compile Include="ToolchainSettingsForm.paml.cs">
-      <DependentUpon>ToolchainSettingsForm.paml</DependentUpon>
+      <DependentUpon>ToolchainSettingsFormView.paml</DependentUpon>
     </Compile>
     <Compile Include="ToolchainSettingsFormViewModel.cs" />
     <Compile Include="TypeSettingsForm.paml.cs">
-      <DependentUpon>TypeSettingsForm.paml</DependentUpon>
+      <DependentUpon>TypeSettingsFormView.paml</DependentUpon>
     </Compile>
     <Compile Include="TypeSettingsFormViewModel.cs" />
     <Compile Include="CPlusPlusProject.cs" />
@@ -199,20 +222,37 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DebuggerSettingsForm.paml">
+    <EmbeddedResource Include="DebuggerSettingsFormView.paml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ComponentSettingsForm.paml" />
-    <EmbeddedResource Include="IncludePathSettingsForm.paml" />
+    <EmbeddedResource Include="IncludePathSettingsFormView.paml" />
+    <EmbeddedResource Include="ClassTemplateSettingsView.paml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="packages.config" />
-    <EmbeddedResource Include="TypeSettingsForm.paml" />
+    <EmbeddedResource Include="TypeSettingsFormView.paml" />
     <EmbeddedResource Include="TargetSettingsForm.paml" />
-    <EmbeddedResource Include="ToolchainSettingsForm.paml" />
-    <EmbeddedResource Include="ReferencesSettingsForm.paml" />
+    <EmbeddedResource Include="ToolchainSettingsFormView.paml" />
+    <EmbeddedResource Include="ReferenceSettingsFormView.paml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CPlusPlusClassTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CPlusPlusClassTemplate.cs</LastGenOutput>
+    </Content>
+    <Content Include="CPlusPlusClassHeaderTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CPlusPlusClassHeaderTemplate.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins\$(TargetFileName)</PostBuildEvent>
+    <PostBuildEvent>if not exist "..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins" mkdir ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins
+copy $(TargetPath) ..\..\..\AvalonStudio\bin\$(ConfigurationName)\Plugins\$(TargetFileName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

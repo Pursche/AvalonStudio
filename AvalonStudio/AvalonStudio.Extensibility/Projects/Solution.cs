@@ -1,209 +1,186 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using AvalonStudio.Extensibility;
+using AvalonStudio.Platforms;
+using AvalonStudio.Shell;
+using AvalonStudio.Utils;
+using Newtonsoft.Json;
+
 namespace AvalonStudio.Projects
 {
-    using Extensibility;
-    using Platforms;
-    using MVVM;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Linq;
-    using Utils;
-    using Shell;
-    public class Solution : SerializedObject<Solution>, ISolution
-    {
-        public const string Extension = "asln";
-        
-        public static IProject LoadProjectFile (ISolution solution, string fileName)
-        {
-            IShell shell = IoC.Get<IShell>();
-            IProject result = null;
+	public class Solution : SerializedObject<Solution>, ISolution
+	{
+		public const string Extension = "asln";
 
-            var extension = Path.GetExtension(fileName).Remove(0, 1);
+		public Solution()
+		{
+			ProjectReferences = new List<string>();
+			Projects = new ObservableCollection<IProject>();
+		}
 
-            var projectType = shell.ProjectTypes.FirstOrDefault((p) => p.Extension == extension);
+		public string StartupItem { get; set; }
 
-            if (projectType != null)
-            {
-                result = projectType.Load(solution, fileName);
-            }
-            else
-            {
-                // create an unloaded project type.
-            }
+		[JsonProperty("Projects")]
+		public IList<string> ProjectReferences { get; set; }
 
-            if(result.ToolChain != null)
-            {
-                result.ToolChain.ProvisionSettings(result);
-            }
+		public IProject AddProject(IProject project)
+		{
+			var currentProject = Projects.FirstOrDefault(p => p.Name == project.Name);
 
-            return result;
-        }
+			if (currentProject != null) return currentProject;
+			ProjectReferences.Add(CurrentDirectory.MakeRelativePath(project.Location));
+			Projects.InsertSorted(project);
+			currentProject = project;
 
-        private static IProject LoadProject (ISolution solution, string reference)
-        {
-            IShell shell = IoC.Get<IShell>();
-            IProject result = null;
+			return currentProject;
+		}
 
-            var extension = Path.GetExtension(reference).Remove(0,1);
+		public void RemoveProject(IProject project)
+		{
+			Projects.Remove(project);
+			ProjectReferences.Remove(CurrentDirectory.MakeRelativePath(project.Location).ToAvalonPath());
+		}
 
-            var projectType = shell.ProjectTypes.FirstOrDefault((p) => p.Extension == extension);
-            var projectFilePath = Path.Combine(solution.CurrentDirectory, reference).ToPlatformPath();
+		public void Save()
+		{
+			StartupItem = StartupProject?.Name;
 
-            if (projectType != null && File.Exists(projectFilePath))
-            {
-                result = projectType.Load(solution, projectFilePath);
-            }
-            else
-            {
-                Console.WriteLine("Failed to load " + projectFilePath);
-                // create an unloaded project type.
-            }
+			for (var i = 0; i < ProjectReferences.Count; i++)
+			{
+				ProjectReferences[i] = ProjectReferences[i].ToAvalonPath();
+			}
 
-            if (result?.ToolChain != null)
-            {
-                result.ToolChain.ProvisionSettings(result);
-            }
+			Serialize(Path.Combine(CurrentDirectory, Name + "." + Extension));
+		}
 
-            return result;
-        }
-        
+		public ISourceFile FindFile(ISourceFile file)
+		{
+			ISourceFile result = null;
 
-        public static Solution Load(string fileName)
-        {
-            Solution solution = null;
-            
-            solution = Deserialize(fileName);            
+			foreach (var project in Projects)
+			{
+				result = project.FindFile(file);
 
-            solution.CurrentDirectory = (Path.GetDirectoryName(fileName) + Platform.DirectorySeperator).ToPlatformPath();
+				if (result != null)
+				{
+					break;
+				}
+			}
 
-            Console.WriteLine("Solution directory is " + solution.CurrentDirectory);
+			return result;
+		}
 
-            foreach (var projectReference in solution.ProjectReferences)
-            {
-                var proj = LoadProject(solution, projectReference);
+		[JsonIgnore]
+		public string CurrentDirectory { get; private set; }
 
-                // todo null returned here we need a placeholder.
-                if (proj != null)
-                {
-                    solution.Projects.InsertSorted(proj);
-                }
-            }
+		[JsonIgnore]
+		public ObservableCollection<IProject> Projects { get; set; }
 
-            foreach (var project in solution.Projects)
-            {
-                project.ResolveReferences();
-            }
+		[JsonIgnore]
+		public IProject StartupProject { get; set; }
 
-            solution.Name = Path.GetFileNameWithoutExtension(fileName);
+		public string Name { get; set; }
 
-            solution.StartupProject = solution.Projects.SingleOrDefault((p) => p.Name == solution.StartupItem);
+		public static IProject LoadProjectFile(ISolution solution, string fileName)
+		{
+			var shell = IoC.Get<IShell>();
+			IProject result = null;
 
-            return solution;
-        }
+			var extension = Path.GetExtension(fileName).Remove(0, 1);
 
-        public IProject FindProject(string name)
-        {
-            IProject result = null;
+			var projectType = shell.ProjectTypes.FirstOrDefault(p => p.Extension == extension);
 
-            foreach (var project in Projects)
-            {
-                if (project.Name == name)
-                {
-                    result = project;
-                    break;
-                }
-            }
+			if (projectType != null)
+			{
+				result = projectType.Load(solution, fileName);
+			}
 
-            if (result == null)
-            {
-                throw new Exception(string.Format("Unable to find project with name {0}", name));
-            }
+			result.ToolChain?.ProvisionSettings(result);
 
-            return result;
-        }
+			return result;
+		}
 
-        public IProject AddProject(IProject project)
-        {
-            var currentProject = Projects.Where((p) => p.Name == project.Name).FirstOrDefault();
+		private static IProject LoadProject(ISolution solution, string reference)
+		{
+			var shell = IoC.Get<IShell>();
+			IProject result = null;
 
-            if (currentProject == null)
-            {
-                ProjectReferences.Add(CurrentDirectory.MakeRelativePath(project.Location));
-                Projects.InsertSorted(project);
-                currentProject = project;
-            }
+			var extension = Path.GetExtension(reference).Remove(0, 1);
 
-            return currentProject;
-        }
+			var projectType = shell.ProjectTypes.FirstOrDefault(p => p.Extension == extension);
+			var projectFilePath = Path.Combine(solution.CurrentDirectory, reference).ToPlatformPath();
 
-        public void RemoveProject(IProject project)
-        {
-            Projects.Remove(project);
-            ProjectReferences.Remove(CurrentDirectory.MakeRelativePath(project.Location).ToAvalonPath());
-        }
+			if (projectType != null && File.Exists(projectFilePath))
+			{
+				result = projectType.Load(solution, projectFilePath);
+			}
+			else
+			{
+				Console.WriteLine("Failed to load " + projectFilePath);
+				// create an unloaded project type.
+			}
 
-        public void Save()
-        {
-            StartupItem = StartupProject?.Name;
-            
-            for(int i = 0; i < ProjectReferences.Count; i++)
-            {
-                ProjectReferences[i] = ProjectReferences[i].ToAvalonPath();
-            }
+			result?.ToolChain?.ProvisionSettings(result);
 
-            Serialize(Path.Combine(CurrentDirectory, Name + "." + Extension));
-        }
+			return result;
+		}
 
-        public static Solution Create(string location, string name)
-        {
-            var result = new Solution();
 
-            result.Name = name;
-            result.CurrentDirectory = location + Platform.DirectorySeperator ;
-            result.Save();
+		public static Solution Load(string fileName)
+		{
+			var solution = Deserialize(fileName);
 
-            return result;
-        }
+			solution.CurrentDirectory = (Path.GetDirectoryName(fileName) + Platform.DirectorySeperator).ToPlatformPath();
 
-        public ISourceFile FindFile(ISourceFile file)
-        {
-            ISourceFile result = null;                
+			Console.WriteLine("Solution directory is " + solution.CurrentDirectory);
 
-            foreach (var project in Projects)
-            {
-                result = project.FindFile(file);
+			foreach (var projectReference in solution.ProjectReferences)
+			{
+				var proj = LoadProject(solution, projectReference);
 
-                if (result != null)
-                {
-                    break;
-                }
-            }
+				// todo null returned here we need a placeholder.
+				if (proj != null)
+				{
+					solution.Projects.InsertSorted(proj);
+				}
+			}
 
-            return result;
-        }
+			foreach (var project in solution.Projects)
+			{
+				project.ResolveReferences();
+			}
 
-        public Solution()
-        {
-            ProjectReferences = new List<string>();
-            Projects = new ObservableCollection<IProject>();
-        }
+			solution.Name = Path.GetFileNameWithoutExtension(fileName);
 
-        [JsonIgnore]
-        public string CurrentDirectory { get; private set; }
+			solution.StartupProject = solution.Projects.SingleOrDefault(p => p.Name == solution.StartupItem);
 
-        [JsonIgnore]
-        public ObservableCollection<IProject> Projects { get; set; }        
+			return solution;
+		}
 
-        [JsonIgnore]
-        public IProject StartupProject { get; set; }        
+		public IProject FindProject(string name)
+		{
+			var result = Projects.FirstOrDefault(project => project.Name == name);
 
-        public string Name { get; set; }
+			if (result == null)
+			{
+				throw new Exception($"Unable to find project with name {name}");
+			}
 
-        public string StartupItem { get; set; }
+			return result;
+		}
 
-        [JsonProperty("Projects")]
-        public IList<string> ProjectReferences { get; set; }
-    }
+		public static Solution Create(string location, string name)
+		{
+			var result = new Solution();
+
+			result.Name = name;
+			result.CurrentDirectory = location + Platform.DirectorySeperator;
+			result.Save();
+
+			return result;
+		}
+	}
 }
