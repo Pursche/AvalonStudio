@@ -196,7 +196,6 @@
     <Compile Include="BracketMatchingBackgroundRenderer.cs" />
     <Compile Include="CSharpLanguageService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestManager.cs" />
     <Compile Include="TextColoringTransformer.cs" />
   </ItemGroup>
   <ItemGroup>
